@@ -11,7 +11,11 @@ class MyPlayer extends StatelessWidget {
       child: Container(
         height: 50,
         width: 50,
-        color: Colors.green,
+        color: Colors.purple,
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //       image: AssetImage("assets/hero.png"), fit: BoxFit.fill),
+        // ),
       ),
     );
   }

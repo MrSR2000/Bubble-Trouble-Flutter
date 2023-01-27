@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bubble_trouble/pages/menu_page.dart';
 import 'package:bubble_trouble/widgets/bubble.dart';
 import 'package:bubble_trouble/widgets/button.dart';
 import 'package:bubble_trouble/widgets/missile.dart';
@@ -21,6 +22,12 @@ class _HomePageState extends State<HomePage> {
   double bubbleX = 0;
   double bubbleY = 0;
   var bubbleDirectoin = direction.LEFT;
+
+  @override
+  void initState() {
+    startGame();
+    super.initState();
+  }
 
   void moveLeft() {
     if (playerX - 0.1 < -1) {
@@ -59,6 +66,7 @@ class _HomePageState extends State<HomePage> {
         //missile is fired
         missileShot = true;
 
+        //check if missile is out of screen
         if (missileHeight + 10 > MediaQuery.of(context).size.height * 6 / 7) {
           missileShot = false;
           resetMissile();
@@ -100,7 +108,7 @@ class _HomePageState extends State<HomePage> {
   void startGame() {
     double time = 0;
     double height = 0;
-    double velocity = 80;
+    double velocity = 90;
 
     Timer.periodic(Duration(milliseconds: 10), (timer) {
       //quadratic equation that models a bounce (upside down parabola)
@@ -147,14 +155,28 @@ class _HomePageState extends State<HomePage> {
     showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Text('Game Over'),
+          return AlertDialog(
+            title: const Text('Game Over'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => MenuPage())),
+                child: const Text('Goto Main-Menu'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  startGame();
+                },
+                child: const Text('play again'),
+              )
+            ],
           );
         });
   }
 
   bool gameOver() {
-    if ((bubbleX - playerX).abs() < 0.05 && bubbleY > 1) {
+    if ((bubbleX - playerX).abs() < 0.2 && bubbleY > 1) {
       return true;
     } else {
       return false;
@@ -201,7 +223,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  MyButton(icon: Icons.play_arrow, function: startGame),
+                  // MyButton(icon: Icons.play_arrow, function: startGame),
                   MyButton(
                     icon: Icons.arrow_back,
                     function: moveLeft,
