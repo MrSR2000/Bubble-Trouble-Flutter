@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   double bubbleX = 0;
   double bubbleY = 0;
   var bubbleDirectoin = direction.LEFT;
+  String playerDirectoin = "stationary";
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       setState(() {
         playerX -= 0.1;
+        playerDirectoin = "left";
       });
     }
     //doesn't let missile travel where character travel
@@ -49,6 +51,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       setState(() {
         playerX += 0.1;
+        playerDirectoin = "right";
       });
     }
 
@@ -153,26 +156,28 @@ class _HomePageState extends State<HomePage> {
 
   gameOverDialogue() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Game Over'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => MenuPage())),
-                child: const Text('Goto Main-Menu'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  startGame();
-                },
-                child: const Text('play again'),
-              )
-            ],
-          );
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Game Over'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => MenuPage())),
+              child: const Text('Goto Main-Menu'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                startGame();
+              },
+              child: const Text('play again'),
+            )
+          ],
+        );
+      },
+    );
   }
 
   bool gameOver() {
@@ -209,6 +214,7 @@ class _HomePageState extends State<HomePage> {
                             missileX: missileX, missileHeight: missileHeight),
                         MyPlayer(
                           playerX: playerX,
+                          playerDirection: playerDirectoin,
                         ),
                       ],
                     ),
